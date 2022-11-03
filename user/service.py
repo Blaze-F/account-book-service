@@ -1,5 +1,5 @@
-from user.repository import UserRepo
 from provider.auth_provider import auth_provider
+from user.repository import UserRepo
 
 
 class UserService:

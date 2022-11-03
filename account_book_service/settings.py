@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+from config.config import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-gk5c*a2x#s$rgv38mqov@ip#uc!8=#a2rzt5$@nasae*-lc&e#"
+SECRET_KEY = config.secrets["django"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,6 +38,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "user.apps.UserConfig",
+    "account_book.apps.AccountBookConfig",
 ]
 
 MIDDLEWARE = [
@@ -47,9 +50,10 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
-ROOT_URLCONF = "account_book.urls"
+ROOT_URLCONF = "account_book_service.urls"
 
 TEMPLATES = [
     {
@@ -67,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "account_book.wsgi.application"
+WSGI_APPLICATION = "account_book_service.wsgi.application"
 
 
 # Database
@@ -75,8 +79,12 @@ WSGI_APPLICATION = "account_book.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": config.databases["database"],
+        "USER": config.databases["username"],
+        "PASSWORD": config.databases["password"],
+        "HOST": config.databases["host"],
+        "PORT": config.databases["port"],
     }
 }
 
@@ -121,3 +129,6 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+# JWT SECRET
+JWT_KEY = config.token["scret"]
+JWT_EXPIRE_TIME = config.token["expire_sec"]

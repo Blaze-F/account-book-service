@@ -1,0 +1,16 @@
+databases:
+  host: "host url"
+  port: 3306
+  database: "db name"
+  username: "username"
+  password: "passwd"
+  timezone: "+09:00"
+
+secrets:
+  django: "django-something-something"
+
+card_pay:
+  member_id: 1234
+
+token:
+  scret: "JWT SECRET HERE"
