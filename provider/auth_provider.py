@@ -77,5 +77,5 @@ class AuthProvider:
                 raise NotAuthorizedError
 
 
-
+ #TODO Redis를 통한 로그아웃 구현
 auth_provider = AuthProvider()

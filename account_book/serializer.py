@@ -15,24 +15,19 @@ class AccountListSerializer(serializers.ModelSerializer):
         fields = ["user_id", "expend", "memo"]
 
 
-class AccountDataReqSchema(serializers.Serializer):
+class AccountCreateReqSchema(serializers.Serializer):
     """메모는 최대 2000자로 제한"""
 
     expend = serializers.IntegerField()
     memo = serializers.CharField(max_length=2000)
 
-
-class AccountDeleteReqSchema(serializers.Serializer):
-    """메모는 최대 2000자로 제한"""
+class AccountUpdateReqSchema(serializers.Serializer):
+    """생성에 order_id가 포함된 요청입니다. """
 
     order_id = serializers.IntegerField()
     expend = serializers.IntegerField()
     memo = serializers.CharField(max_length=2000)
-    is_deleted = serializers.CharField(max_length=1)
 
-
-class AccountDeleteReqSchema(serializers.Serializer):
-    """삭제 요청에 대한 스키마"""
 
 
 class AccountResSchema(serializers.Serializer):

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 from config.config import config
 
@@ -132,3 +133,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # JWT SECRET
 JWT_KEY = config.token["scret"]
 JWT_EXPIRE_TIME = config.token["expire_sec"]
+# REFRESH_TOKEN_LIFETIME: timedelta(days=config.token["referesh_expire_day"])
