@@ -31,35 +31,36 @@ def account_update(request):
     user_id = request.user["id"]
     created = account_book_service.update(user_id=user_id, data=request.data)
 
-    return JsonResponse(created)
+    return JsonResponse(created, status=200)
 
 
 @api_view(["DELETE"])
 @execption_hanlder()
 @must_be_user()
 @parser_classes([JSONParser])
-def account_delete(request, account_id):
-    created = account_book_service.soft_delete(account_id)
-    return JsonResponse(created)
+def account_delete_or_recover(request, account_id: int):
+    delete_or_recover = account_book_service.soft_delete(account_id)
+    return JsonResponse(delete_or_recover, status=200)
 
 
 @api_view(["GET"])
-@execption_hanlder()
+# @execption_hanlder()
 @must_be_user()
 @parser_classes([JSONParser])
-def account_get(request, account_id):
+def account_get(request):
     user_id = request.user["id"]
+    account_id = request.GET["account_id"]
     created = account_book_service.get(account_id)
 
-    return JsonResponse(created)
+    return JsonResponse(created, status=200)
 
 
 @api_view(["GET"])
-@execption_hanlder()
+# @execption_hanlder()
 @must_be_user()
 @parser_classes([JSONParser])
 def account_find_all(request):
     user_id = request.user["id"]
     created = account_book_service.find(user_id=user_id)
 
-    return JsonResponse(created)
+    return JsonResponse(created, safe=False, status=200)

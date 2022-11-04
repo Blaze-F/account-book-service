@@ -17,7 +17,7 @@ class AbstractAccountRepository:
 
 
 class AccountRepository(AbstractAccountRepository):
-    def get_account_by_id(self, user_id: int, account_id: int) -> dict:
+    def get_account_by_id(self, account_id: int) -> dict:
         """유저가 가진 가계부 상세정보를 리턴"""
         try:
             return self.serializer(
@@ -28,17 +28,21 @@ class AccountRepository(AbstractAccountRepository):
 
     def find_account_by_user_id(self, user_id: int) -> dict:
         """유저가 가진 가계부 정보를 리스트로 리턴"""
+        temp = self.model.objects.select_related("user").filter(user__id=user_id)
         try:
-            return self.serializer(
-                self.model.objects.select_related("user").filter(user__id=user_id), many=True
+            return self.list_serializer(
+                temp, many=True
             ).data
         except self.model.DoesNotExist:
             raise NotFoundError()
 
     def create_account(self, data: dict, user_id: int) -> dict:
         """create_account : 인자로 딕셔너리 (expend, memo), 유저 아이디를 받습니다."""
-        data["user_id"] = user_id
-        obj, is_created = self.model.objects.update_or_create(defaults=data)
+        expend = data["expend"]
+        memo = data["memo"]
+        obj, is_created = self.model.objects.update_or_create(
+            user_id=user_id, memo=memo, expend=expend, defaults=data
+        )
         try:
             return self.serializer(obj).data
         except self.model.DoesNotExist:
@@ -62,7 +66,7 @@ class AccountRepository(AbstractAccountRepository):
         else:
             get["is_deleted"] == "V"
             get["recovered_at"] == datetime.datetime.now()
-        #제대로 나오는지 확인 필요
+        # 제대로 나오는지 확인 필요
         update = AccountUpdateReqSchema(data=get)
         update.is_valid(raise_exception=True)
         return self.serializer(

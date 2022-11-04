@@ -22,8 +22,8 @@ class AccountBookService:
         return self.account_book_repo.soft_delete(user_id=user_id, order_id=order_id)
 
     # TODO모델에 맞는지 리턴값 Validation
-    def get(self, order_id: int) -> dict:
-        return self.account_book_repo.get_account_by_id(order_id)
+    def get(self, account_id: int) -> dict:
+        return self.account_book_repo.get_account_by_id(account_id)
 
     def find(self, user_id: int) -> list:
         res = []
