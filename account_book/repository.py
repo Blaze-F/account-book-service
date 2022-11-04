@@ -6,7 +6,7 @@ from account_book.serializer import (
     AccountSerializer,
     AccountUpdateReqSchema,
 )
-from exceptions import NotFoundError
+from exceptions import NotAuthorizedError, NotFoundError
 
 
 class AbstractAccountRepository:
@@ -30,18 +30,14 @@ class AccountRepository(AbstractAccountRepository):
         """유저가 가진 가계부 정보를 리스트로 리턴"""
         temp = self.model.objects.select_related("user").filter(user__id=user_id)
         try:
-            return self.list_serializer(
-                temp, many=True
-            ).data
+            return self.list_serializer(temp, many=True).data
         except self.model.DoesNotExist:
             raise NotFoundError()
 
     def create_account(self, data: dict, user_id: int) -> dict:
         """create_account : 인자로 딕셔너리 (expend, memo), 유저 아이디를 받습니다."""
-        expend = data["expend"]
-        memo = data["memo"]
         obj, is_created = self.model.objects.update_or_create(
-            user_id=user_id, memo=memo, expend=expend, defaults=data
+            user_id=user_id, memo=data.pop("memo"), expend=data.pop("expend"), defaults=data
         )
         try:
             return self.serializer(obj).data
@@ -50,7 +46,7 @@ class AccountRepository(AbstractAccountRepository):
 
     def update_account(self, data: dict, user_id: int) -> dict:
         """update_account : 인자로 딕셔너리 (expend, memo, id), 유저 아이디를 받습니다."""
-        obj, is_created = self.model.objects.update_or_create(user_id=user_id, defaults=data)
+        obj, is_created = self.model.objects.update_or_create(user__id=user_id, defaults=data)
         try:
             return self.serializer(obj).data
         except self.model.DoesNotExist:
@@ -58,17 +54,30 @@ class AccountRepository(AbstractAccountRepository):
 
     def soft_delete_or_recover_account(self, user_id: int, account_id: int) -> str:
         """soft_delete_account : 인자로 user_id, account_id 를 받습니다."""
-        get = self.serializer(self.model.objects.get(id=account_id)).data
-        # is_deleted의 상태를 반전
-        if get["is_deleted"] == "V":
-            get["is_deleted"] == "I"
-            get["deleted_at"] == datetime.datetime.now()
+        get = self.model.objects.get(id=account_id)
+        
+        # 직렬화 이전 인스턴스만 따로 추출
+        user_ins = get.user
+        
+        data = self.serializer(get).data
+        # 다른 유저가 삭제를 요청했을경우 validate
+        if data["user"] != user_id:
+            raise NotAuthorizedError
+        self.change_status(data)
+        del data["user"]
+        del data["id"]
+        res, is_created = self.model.objects.update_or_create(
+            id=account_id,
+            user = user_ins,
+            defaults=data,
+        )
+        return self.serializer(res).data
+
+    def change_status(self, data: dict) -> None:
+
+        if data["is_deleted"] == "V":
+            data["is_deleted"] = "I"
+            data["deleted_at"] = datetime.datetime.now()
         else:
-            get["is_deleted"] == "V"
-            get["recovered_at"] == datetime.datetime.now()
-        # 제대로 나오는지 확인 필요
-        update = AccountUpdateReqSchema(data=get)
-        update.is_valid(raise_exception=True)
-        return self.serializer(
-            self.model.objects.update_or_create(user_id=user_id, defaults=update)
-        ).data
+            data["is_deleted"] = "V"
+            data["recovered_at"] = datetime.datetime.now()

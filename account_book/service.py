@@ -18,8 +18,10 @@ class AccountBookService:
         res = self.account_book_repo.update_account(params.data, user_id)
         return res
 
-    def soft_delete(self, user_id: int, order_id: int) -> str:
-        return self.account_book_repo.soft_delete(user_id=user_id, order_id=order_id)
+    def soft_delete(self, user_id: int, account_id: int) -> str:
+        return self.account_book_repo.soft_delete_or_recover_account(
+            user_id=user_id, account_id=account_id
+        )
 
     # TODO모델에 맞는지 리턴값 Validation
     def get(self, account_id: int) -> dict:

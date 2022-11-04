@@ -35,11 +35,13 @@ def account_update(request):
 
 
 @api_view(["DELETE"])
-@execption_hanlder()
+# @execption_hanlder()
 @must_be_user()
 @parser_classes([JSONParser])
-def account_delete_or_recover(request, account_id: int):
-    delete_or_recover = account_book_service.soft_delete(account_id)
+def account_delete_or_recover(request):
+    user_id = request.user["id"]
+    account_id = request.GET["account_id"]
+    delete_or_recover = account_book_service.soft_delete(user_id=user_id, account_id=account_id)
     return JsonResponse(delete_or_recover, status=200)
 
 

@@ -4,7 +4,6 @@ from account_book_service.models import BaseModel
 from user.models import User
 
 
-    
 class Account(BaseModel):
     user = models.ForeignKey(
         User,
@@ -13,9 +12,11 @@ class Account(BaseModel):
     )
     expend = models.IntegerField()
     memo = models.TextField()
-    is_deleted = models.CharField(max_length=1, null=False, default="V") #삭제 플래그는 (visual, V) (invisiual, I)
-    deleted_at = models.DateTimeField(null=True) 
-    recovered_at = models.DateField(null=True) 
-    
+    is_deleted = models.CharField(
+        max_length=1, null=False, default="V"
+    )  # 삭제 플래그는 (visual, V) (invisiual, I)
+    deleted_at = models.DateTimeField(null=True)
+    recovered_at = models.DateTimeField(null=True)
+
     class Meta:
         db_table = "account"
