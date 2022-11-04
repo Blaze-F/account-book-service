@@ -24,7 +24,7 @@ def account_create(request):
 
 
 @api_view(["PUT"])
-@execption_hanlder()
+# @execption_hanlder()
 @must_be_user()
 @parser_classes([JSONParser])
 def account_update(request):
