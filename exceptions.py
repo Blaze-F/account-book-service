@@ -24,7 +24,7 @@ class NotAuthorizedError(CustomBaseExecption):
 
 class NoPermssionError(CustomBaseExecption):
     def __init__(self):
-        self.msg = "Unauthorized request. Please check your permission"
+        self.msg = "HTTP_401_UNAUTHORIZED : Unauthorized request. Please check your permission"
         self.status = status.HTTP_401_UNAUTHORIZED
 
 
@@ -53,3 +53,8 @@ class TooManyCursorResult(CustomBaseExecption):
         self.message = message
         self.status = status.HTTP_500_INTERNAL_SERVER_ERROR
         super(TooManyCursorResult, self).__init__(self.message)
+
+class InvalidRequestError(CustomBaseExecption):
+    def __init__(self):
+        self.msg = "HTTP_403_FORBIDDEN : 잘못된 요청입니다"
+        self.status = status.HTTP_403_FORBIDDEN

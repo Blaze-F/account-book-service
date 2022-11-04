@@ -6,7 +6,7 @@ from account_book.serializer import (
     AccountSerializer,
     AccountUpdateReqSchema,
 )
-from exceptions import NotAuthorizedError, NotFoundError
+from exceptions import InvalidRequestError, NotAuthorizedError, NotFoundError
 
 
 class AbstractAccountRepository:
@@ -74,18 +74,43 @@ class AccountRepository(AbstractAccountRepository):
         except self.model.DoesNotExist:
             raise NotFoundError()
 
-    def soft_delete_or_recover_account(self, user_id: int, account_id: int) -> str:
+    def soft_delete_account(self, user_id: int, account_id: int) -> dict:
         """soft_delete_account : 인자로 user_id, account_id 를 받습니다."""
+
+        return self.change_status_and_update(user_id=user_id, account_id=account_id, flag="delete")
+
+    def recover_account(self, user_id: int, account_id: int) -> dict:
+        """soft_delete_account : 인자로 user_id, account_id 를 받습니다."""
+
+        return self.change_status_and_update(user_id=user_id, account_id=account_id, flag="recover")
+
+    def change_status_and_update(
+        self, user_id: int, account_id: int, flag: str
+    ) -> dict:
+        """change_status_and_update 요청 플래그가 잘못된경우 에러를 반환합니다."""
         get = self.model.objects.get(id=account_id)
 
-        # 직렬화 이전 인스턴스만 따로 추출
+        # 직렬화 이전 객체 인스턴스만 따로 추출
         user_ins = get.user
 
         data = self.serializer(get).data
         # 다른 유저가 삭제를 요청했을경우 validate
         if data["user"] != user_id:
             raise NotAuthorizedError
-        self.change_status(data)
+
+        if data["is_deleted"] == "V":
+            if flag == "delete":
+                data["is_deleted"] = "I"
+                data["deleted_at"] = datetime.datetime.now()
+            else:
+                raise InvalidRequestError
+        elif data["is_deleted"] == "I":
+            if flag == "recover":
+                data["is_deleted"] = "V"
+                data["recovered_at"] = datetime.datetime.now()
+            else:
+                raise InvalidRequestError
+
         del data["user"]
         del data["id"]
         res, is_created = self.model.objects.update_or_create(
@@ -94,12 +119,3 @@ class AccountRepository(AbstractAccountRepository):
             defaults=data,
         )
         return self.serializer(res).data
-
-    def change_status(self, data: dict) -> None:
-
-        if data["is_deleted"] == "V":
-            data["is_deleted"] = "I"
-            data["deleted_at"] = datetime.datetime.now()
-        else:
-            data["is_deleted"] = "V"
-            data["recovered_at"] = datetime.datetime.now()

@@ -19,11 +19,12 @@ class AccountBookService:
         return res
 
     def soft_delete(self, user_id: int, account_id: int) -> str:
-        return self.account_book_repo.soft_delete_or_recover_account(
-            user_id=user_id, account_id=account_id
-        )
+        return self.account_book_repo.soft_delete_account(user_id=user_id, account_id=account_id)
 
-    # TODO모델에 맞는지 리턴값 Validation
+    def recover(self, user_id: int, account_id: int) -> str:
+
+        return self.account_book_repo.recover_account(user_id=user_id, account_id=account_id)
+
     def get(self, account_id: int) -> dict:
         return self.account_book_repo.get_account_by_id(account_id)
 

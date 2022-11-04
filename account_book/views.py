@@ -38,11 +38,11 @@ def account_update(request):
 # @execption_hanlder()
 @must_be_user()
 @parser_classes([JSONParser])
-def account_delete_or_recover(request):
+def account_delete(request):
     user_id = request.user["id"]
     account_id = request.GET["account_id"]
-    delete_or_recover = account_book_service.soft_delete(user_id=user_id, account_id=account_id)
-    return JsonResponse(delete_or_recover, status=200)
+    res = account_book_service.soft_delete(user_id=user_id, account_id=account_id)
+    return JsonResponse(res, status=200)
 
 
 @api_view(["GET"])
@@ -52,9 +52,9 @@ def account_delete_or_recover(request):
 def account_get(request):
     user_id = request.user["id"]
     account_id = request.GET["account_id"]
-    created = account_book_service.get(account_id)
+    res= account_book_service.get(account_id)
 
-    return JsonResponse(created, status=200)
+    return JsonResponse(res, status=200)
 
 
 @api_view(["GET"])
@@ -63,6 +63,16 @@ def account_get(request):
 @parser_classes([JSONParser])
 def account_find_all(request):
     user_id = request.user["id"]
-    created = account_book_service.find(user_id=user_id)
+    res = account_book_service.find(user_id=user_id)
 
-    return JsonResponse(created, safe=False, status=200)
+    return JsonResponse(res, safe=False, status=200)
+
+@api_view(["GET"])
+@execption_hanlder()
+@must_be_user()
+@parser_classes([JSONParser])
+def account_recover(request):
+    user_id = request.user["id"]
+    account_id = request.GET["account_id"]
+    res = account_book_service.recover(user_id=user_id, account_id=account_id)
+    return JsonResponse(res, status=200)

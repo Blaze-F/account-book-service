@@ -22,17 +22,6 @@ class UserRepo(AbstractUserRepo):
         except self.model.DoesNotExist:
             raise NotFoundError
 
-    def get_by_account_number(self, account_number: int):
-        """계좌번호로 유저 정보를 찾는 메서드"""
-        try:
-            return UserSerializer(
-                self.model.objects.prefetch_related("account_set")
-                .filter(account__number__exact=account_number)
-                .first()
-            ).data
-        except self.model.DoesNotExist:
-            raise NotFoundError
-
     def create(self, name: str, email: str, password: str):
         serializer = self.serializer(
             data={
