@@ -20,7 +20,8 @@ def account_create(request):
     user_id = request.user["id"]
     created = account_book_service.create(user_id=user_id, data=request.data)
 
-    return JsonResponse(created)
+    return JsonResponse(created, status=201)
+
 
 @api_view(["PUT"])
 @execption_hanlder()
@@ -28,55 +29,37 @@ def account_create(request):
 @parser_classes([JSONParser])
 def account_update(request):
     user_id = request.user["id"]
-    created = account_book_service.create(user_id=user_id, data=request.data)
+    created = account_book_service.update(user_id=user_id, data=request.data)
 
     return JsonResponse(created)
 
-@api_view(["D"])
+
+@api_view(["DELETE"])
 @execption_hanlder()
 @must_be_user()
 @parser_classes([JSONParser])
-def account_delete(request):
+def account_delete(request, account_id):
+    created = account_book_service.soft_delete(account_id)
+    return JsonResponse(created)
+
+
+@api_view(["GET"])
+@execption_hanlder()
+@must_be_user()
+@parser_classes([JSONParser])
+def account_get(request, account_id):
     user_id = request.user["id"]
-    created = account_book_service.create(user_id=user_id, data=request.data)
+    created = account_book_service.get(account_id)
 
     return JsonResponse(created)
 
 
-# @api_view(["GET"])
-# @execption_hanlder()
-# @must_be_user()
-# @parser_classes([JSONParser])  # json paser request를 구문분석
-# def get_account(request):
-#     auth_token = auth_provider.get_token_from_request(request)
-#     return JsonResponse(payment_service.get(int(payment_id), request.user["id"], auth_token))
+@api_view(["GET"])
+@execption_hanlder()
+@must_be_user()
+@parser_classes([JSONParser])
+def account_find_all(request):
+    user_id = request.user["id"]
+    created = account_book_service.find(user_id=user_id)
 
-
-# @api_view(["GET"])
-# @execption_hanlder()
-# @must_be_user()
-# @parser_classes([JSONParser])
-# def get_account(request):
-#     auth_token = auth_provider.get_token_from_request(request)
-#     return JsonResponse(payment_service.get(int(payment_id), request.user["id"], auth_token))
-
-
-# @api_view(["GET"])
-# @execption_hanlder()
-# @must_be_user()
-# @parser_classes([JSONParser])
-# def order_details(request, order_id: int):
-#     return JsonResponse(order_management_service._get_order_detail(order_id))
-
-
-# @api_view(["PUT"])
-# @execption_hanlder()
-# @parser_classes([JSONParser])
-# def order_status_update(request):
-#     params = OrderUpdateSchema(data=request.data)
-#     params.is_valid(raise_exception=True)
-#     order_id = params.data["order_id"]
-#     status = params.data["status"]
-
-#     a = params.data
-#     return JsonResponse(order_management_service._deilvery_status_update(order_id, status))
+    return JsonResponse(created)

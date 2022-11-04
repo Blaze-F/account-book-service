@@ -3,31 +3,29 @@ from account_book.serializer import AccountCreateReqSchema, AccountUpdateReqSche
 
 
 class AccountBookService:
-    def __init__(self, account_book_repo : AbstractAccountRepository) -> None:
+    def __init__(self, account_book_repo: AbstractAccountRepository) -> None:
         self.account_book_repo = account_book_repo
-        
-    def create(self, data : dict, user_id : int) -> dict :
+
+    def create(self, data: dict, user_id: int) -> dict:
         params = AccountCreateReqSchema(data=data)
         params.is_valid(raise_exception=True)
-        res = self.account_book_repo.create_account(params.data,user_id)
+        res = self.account_book_repo.create_account(params.data, user_id)
         return res
-        
-    def update(self, data: dict, user_id :int) -> dict:
+
+    def update(self, data: dict, user_id: int) -> dict:
         params = AccountUpdateReqSchema(data=data)
         params.is_valid(raise_exception=True)
-        res = self.account_book_repo.update_account(params.data,user_id)
+        res = self.account_book_repo.update_account(params.data, user_id)
         return res
-    
-    def soft_delete(self, data: dict, user_id : int) -> str:
-        
-        
-        pass
-    def get(self, user_id:int) -> dict:
-        
-        
-        
-        pass
-    def find(self, user_id:int) -> list:
-        
-        
-        pass
+
+    def soft_delete(self, user_id: int, order_id: int) -> str:
+        return self.account_book_repo.soft_delete(user_id=user_id, order_id=order_id)
+
+    # TODO모델에 맞는지 리턴값 Validation
+    def get(self, order_id: int) -> dict:
+        return self.account_book_repo.get_account_by_id(order_id)
+
+    def find(self, user_id: int) -> list:
+        res = []
+        res = self.account_book_repo.find_account_by_user_id(user_id)
+        return res

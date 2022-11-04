@@ -17,11 +17,11 @@ class AbstractAccountRepository:
 
 
 class AccountRepository(AbstractAccountRepository):
-    def get_account_by_user_id(self, user_id: int) -> dict:
+    def get_account_by_id(self, user_id: int, account_id: int) -> dict:
         """유저가 가진 가계부 상세정보를 리턴"""
         try:
             return self.serializer(
-                self.model.objects.select_related("user").get(user__id=user_id)
+                self.model.objects.select_related("user").get(id=account_id)
             ).data
         except self.model.DoesNotExist:
             raise NotFoundError()

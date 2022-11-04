@@ -12,7 +12,7 @@ class AccountSerializer(serializers.ModelSerializer):
 class AccountListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ["user_id", "expend", "memo"]
+        fields = ["id", "user_id", "expend", "memo"]
 
 
 class AccountCreateReqSchema(serializers.Serializer):
@@ -21,13 +21,13 @@ class AccountCreateReqSchema(serializers.Serializer):
     expend = serializers.IntegerField()
     memo = serializers.CharField(max_length=2000)
 
+
 class AccountUpdateReqSchema(serializers.Serializer):
-    """생성에 order_id가 포함된 요청입니다. """
+    """생성에 order_id가 포함된 요청입니다."""
 
     order_id = serializers.IntegerField()
     expend = serializers.IntegerField()
     memo = serializers.CharField(max_length=2000)
-
 
 
 class AccountResSchema(serializers.Serializer):
