@@ -14,9 +14,9 @@ account_book_repo = AccountRepository()
 account_book_service = AccountBookService(account_book_repo=account_book_repo)
 
 @swagger_auto_schema(method="post", responses={200: AccountSerializer}, request_body=AccountCreateReqSchema)
-@must_be_user()
 @api_view(["POST"])
 @execption_hanlder()
+@must_be_user()
 @parser_classes([JSONParser])
 def account_create(request):
     user_id = request.user["id"]
