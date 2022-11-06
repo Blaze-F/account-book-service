@@ -10,10 +10,10 @@ from account_book.views import (
 
 
 urlpatterns = [
-    path("account/create", account_create),
-    path("account/details", account_get),
-    path("account/update", account_update),
-    path("account/delete", account_delete),
-    path("account/list", account_find_all),
-    path("account/recover", account_recover),
+    path("account/create", account_create, name="create"),
+    path("account/details", account_get, name="details"),
+    path("account/update", account_update, name="update"),
+    path("account/delete", account_delete, name="delete"),
+    path("account/list", account_find_all, name="list"),
+    path("account/recover", account_recover, name="recover"),
 ]

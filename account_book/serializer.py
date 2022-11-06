@@ -29,7 +29,7 @@ class AccountUpdateReqSchema(serializers.Serializer):
     memo = serializers.CharField(max_length=2000)
 
 
-class AccountResSchema(serializers.Serializer):
-    expend = serializers.IntegerField()
-    memo = serializers.CharField(max_length=2000)
-    is_deleted = serializers.CharField(max_length=1)
+# class AccountResSchema(serializers.Serializer):
+#     expend = serializers.IntegerField()
+#     memo = serializers.CharField(max_length=2000)
+#     is_deleted = serializers.CharField(max_length=1)

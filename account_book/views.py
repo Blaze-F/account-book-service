@@ -24,7 +24,7 @@ def account_create(request):
 
 
 @api_view(["PUT"])
-# @execption_hanlder()
+@execption_hanlder()
 @must_be_user()
 @parser_classes([JSONParser])
 def account_update(request):
@@ -35,7 +35,7 @@ def account_update(request):
 
 
 @api_view(["DELETE"])
-# @execption_hanlder()
+@execption_hanlder()
 @must_be_user()
 @parser_classes([JSONParser])
 def account_delete(request):
@@ -46,7 +46,7 @@ def account_delete(request):
 
 
 @api_view(["GET"])
-# @execption_hanlder()
+@execption_hanlder()
 @must_be_user()
 @parser_classes([JSONParser])
 def account_get(request):
@@ -58,7 +58,7 @@ def account_get(request):
 
 
 @api_view(["GET"])
-# @execption_hanlder()
+@execption_hanlder()
 @must_be_user()
 @parser_classes([JSONParser])
 def account_find_all(request):

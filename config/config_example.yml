@@ -1,16 +1,15 @@
 databases:
-  host: "host url"
+  host: "localhost"
   port: 3306
-  database: "db name"
-  username: "username"
-  password: "passwd"
+  database: "account_book"
+  username: ""
+  password: ""
   timezone: "+09:00"
 
 secrets:
-  django: "django-something-something"
-
-card_pay:
-  member_id: 1234
+  django: ""
 
 token:
-  scret: "JWT SECRET HERE"
+  scret: ""
+  referesh_expire_day: 7
+  expire_sec: 3600
