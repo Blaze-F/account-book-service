@@ -2,14 +2,14 @@ databases:
   host: "localhost"
   port: 3306
   database: "account_book"
-  username: ""
-  password: ""
+  username: "db user name"
+  password: "db pw"
   timezone: "+09:00"
 
 secrets:
-  django: ""
+  django: "django secret"
 
 token:
-  scret: ""
+  scret: "jwt secret"
   referesh_expire_day: 7
   expire_sec: 3600

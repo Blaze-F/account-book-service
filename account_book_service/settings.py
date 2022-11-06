@@ -135,3 +135,18 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 JWT_KEY = config.token["scret"]
 JWT_EXPIRE_TIME = config.token["expire_sec"]
 # REFRESH_TOKEN_LIFETIME: timedelta(days=config.token["referesh_expire_day"])
+
+#Swagger 인증절차
+SWAGGER_SETTINGS = {
+   'USE_SESSION_AUTH': False,
+      'SECURITY_DEFINITIONS': {
+      'Basic': {
+            'type': 'basic'
+      },
+      'Bearer': {
+            'type': 'JWT Token',
+            'name': 'Authorization',
+            'in': 'header'
+      }
+   }
+}

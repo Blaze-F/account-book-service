@@ -16,12 +16,27 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path, re_path
 from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework import permissions
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Account_book_service_API",
+        default_version="v1",
+        description="NONE",
+        terms_of_service="https://github.com/Blaze-F/account-book-service",
+        contact=openapi.Contact(email="daeda766@gmail.com"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny],
+)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("account_book.urls")),
     path("", include("user.urls")),
-        re_path(
+    re_path(
         r"^swagger/$",
         schema_view.with_ui("swagger", cache_timeout=0),
         name="schema-swagger-ui",

@@ -7,16 +7,16 @@ from account_book.service import AccountBookService
 from decorator.auth_handler import must_be_user
 from decorator.execption_handler import execption_hanlder
 from drf_yasg.utils import swagger_auto_schema
+from drf_yasg.openapi import Parameter, IN_QUERY
 
 # 인스턴스 생성
 account_book_repo = AccountRepository()
 account_book_service = AccountBookService(account_book_repo=account_book_repo)
 
-
-@api_view(["POST"])
-@execption_hanlder()
 @swagger_auto_schema(method="post", responses={200: AccountSerializer}, request_body=AccountCreateReqSchema)
 @must_be_user()
+@api_view(["POST"])
+@execption_hanlder()
 @parser_classes([JSONParser])
 def account_create(request):
     user_id = request.user["id"]
@@ -24,10 +24,9 @@ def account_create(request):
 
     return JsonResponse(created, status=201)
 
-
+@swagger_auto_schema(method="put", responses={200: AccountSerializer}, request_body=AccountUpdateReqSchema)
 @api_view(["PUT"])
 @execption_hanlder()
-@swagger_auto_schema(method="put", responses={200: AccountSerializer}, request_body=AccountUpdateReqSchema)
 @must_be_user()
 @parser_classes([JSONParser])
 def account_update(request):
@@ -37,22 +36,31 @@ def account_update(request):
     return JsonResponse(created, status=200)
 
 
+@swagger_auto_schema(method="delete",manual_parameters=[
+            Parameter('account_id', IN_QUERY,
+                      '생성 아이디 입니다.',
+                      type='int'),
+            # Parameter('share_id', IN_PATH, type='uuid')
+        ], responses={200: AccountSerializer})
 @api_view(["DELETE"])
 @execption_hanlder()
 @must_be_user()
-@swagger_auto_schema(method="delete", responses={200: AccountSerializer})
 @parser_classes([JSONParser])
 def account_delete(request):
     user_id = request.user["id"]
     account_id = request.GET["account_id"]
     res = account_book_service.soft_delete(user_id=user_id, account_id=account_id)
+    
     return JsonResponse(res, status=200)
 
-
+@swagger_auto_schema(method="get",manual_parameters=[
+            Parameter('account_id', IN_QUERY,
+                      '생성 아이디 입니다. 쿼리스트링입니다.',
+                      type='int'),
+        ], responses={200: AccountSerializer})
 @api_view(["GET"])
 @execption_hanlder()
 @must_be_user()
-@swagger_auto_schema(method="get", responses={200: AccountSerializer})
 @parser_classes([JSONParser])
 def account_get(request):
     user_id = request.user["id"]
@@ -61,11 +69,14 @@ def account_get(request):
 
     return JsonResponse(res, status=200)
 
-
+@swagger_auto_schema(method="get",manual_parameters=[
+            Parameter('account_id', IN_QUERY,
+                      '생성 아이디 입니다.',
+                      type='int'),
+        ], responses={200: AccountSerializer})
 @api_view(["GET"])
 @execption_hanlder()
 @must_be_user()
-@swagger_auto_schema(method="get", responses={200: AccountListSerializer})
 @parser_classes([JSONParser])
 def account_find_all(request):
     user_id = request.user["id"]
@@ -73,11 +84,14 @@ def account_find_all(request):
 
     return JsonResponse(res, safe=False, status=200)
 
-
+@swagger_auto_schema(method="get",manual_parameters=[
+            Parameter('account_id', IN_QUERY,
+                      '생성 아이디 입니다. 쿼리스트링입니다.',
+                      type='int'),
+        ], responses={200: AccountSerializer})
 @api_view(["GET"])
 @execption_hanlder()
 @must_be_user()
-@swagger_auto_schema(method="get", responses={200: AccountSerializer})
 @parser_classes([JSONParser])
 def account_recover(request):
     user_id = request.user["id"]
