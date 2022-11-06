@@ -1,17 +1,17 @@
-# ./Dockerfile 
-FROM python:3
-WORKDIR /usr/src/app
+FROM python:3.10.8
 
-## Install packages
-COPY requirements.txt ./
+MAINTAINER jh Hwang <daeda766@gmail.com>
+
+# RUN mkdir /server/docker
+ADD . /server/docker
+WORKDIR /server/docker 
+RUN pip install --upgrade pip 
 RUN pip install -r requirements.txt
+RUN python manage.py makemigrations
+RUN python manage.py migrate
 
-## Copy all src files
-COPY . .
 
-## Run the application on the port 8080
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+
+
 EXPOSE 8000
-
-# gunicorn 배포 명령어
-# CMD ["gunicorn", "--bind", "허용하는 IP:열어줄 포트", "project.wsgi:application"]
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "stock.wsgi:application"]

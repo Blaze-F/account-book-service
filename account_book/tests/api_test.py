@@ -23,11 +23,11 @@ class test_api_response(APITestCase):
             },
             content_type="application/json",
         )
-        temp = res.content
+        temp = client_user.email
         access_token = res.content
         #TODO 헤더에 토큰값 테스트코드에서 어떻게 하는지 알아보기.
         #APIClient credentials 대신 login 에서 변수로 credential을 받는데 뭔지 알아보기.
-        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token['access_token']}")
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
 
     @pytest.fixture(autouse=True)
     def setUp(self):
