@@ -15,8 +15,6 @@ class test_api_response(APITestCase):
     
     
     def change_authorization(self, client_user):
-        
-        
         res = self.client.post(
             self.url_login,
             {

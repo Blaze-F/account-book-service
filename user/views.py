@@ -14,7 +14,7 @@ auth_provider = AuthProvider()
 
 
 @api_view(["POST"])
-# @execption_hanlder()
+@execption_hanlder()
 @parser_classes([JSONParser])
 @swagger_auto_schema(
     responses={"access": "encoded_jwt"},

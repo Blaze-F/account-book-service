@@ -2,10 +2,11 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import JSONParser
 from account_book.repository import AccountRepository
+from account_book.serializer import AccountCreateReqSchema, AccountListSerializer, AccountSerializer, AccountUpdateReqSchema
 from account_book.service import AccountBookService
 from decorator.auth_handler import must_be_user
 from decorator.execption_handler import execption_hanlder
-from provider.auth_provider import auth_provider
+from drf_yasg.utils import swagger_auto_schema
 
 # 인스턴스 생성
 account_book_repo = AccountRepository()
@@ -14,6 +15,7 @@ account_book_service = AccountBookService(account_book_repo=account_book_repo)
 
 @api_view(["POST"])
 @execption_hanlder()
+@swagger_auto_schema(method="post", responses={200: AccountSerializer}, request_body=AccountCreateReqSchema)
 @must_be_user()
 @parser_classes([JSONParser])
 def account_create(request):
@@ -25,6 +27,7 @@ def account_create(request):
 
 @api_view(["PUT"])
 @execption_hanlder()
+@swagger_auto_schema(method="put", responses={200: AccountSerializer}, request_body=AccountUpdateReqSchema)
 @must_be_user()
 @parser_classes([JSONParser])
 def account_update(request):
@@ -37,6 +40,7 @@ def account_update(request):
 @api_view(["DELETE"])
 @execption_hanlder()
 @must_be_user()
+@swagger_auto_schema(method="delete", responses={200: AccountSerializer})
 @parser_classes([JSONParser])
 def account_delete(request):
     user_id = request.user["id"]
@@ -48,6 +52,7 @@ def account_delete(request):
 @api_view(["GET"])
 @execption_hanlder()
 @must_be_user()
+@swagger_auto_schema(method="get", responses={200: AccountSerializer})
 @parser_classes([JSONParser])
 def account_get(request):
     user_id = request.user["id"]
@@ -60,6 +65,7 @@ def account_get(request):
 @api_view(["GET"])
 @execption_hanlder()
 @must_be_user()
+@swagger_auto_schema(method="get", responses={200: AccountListSerializer})
 @parser_classes([JSONParser])
 def account_find_all(request):
     user_id = request.user["id"]
@@ -71,6 +77,7 @@ def account_find_all(request):
 @api_view(["GET"])
 @execption_hanlder()
 @must_be_user()
+@swagger_auto_schema(method="get", responses={200: AccountSerializer})
 @parser_classes([JSONParser])
 def account_recover(request):
     user_id = request.user["id"]

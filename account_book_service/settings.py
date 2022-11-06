@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "user.apps.UserConfig",
+    "drf_yasg",
     "account_book.apps.AccountBookConfig",
 ]
 
