@@ -14,7 +14,7 @@ class Account(BaseModel):
     expend = models.IntegerField()
     memo = models.TextField()
     is_deleted = models.CharField(
-        max_length=1, null=False, default="V", choices = AccountStatusType
+        max_length=1, null=False, default="V"
     )  # 삭제 플래그는 (visual, V) (invisiual, I)
     deleted_at = models.DateTimeField(null=True)
     recovered_at = models.DateTimeField(null=True)

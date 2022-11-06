@@ -17,12 +17,18 @@ class AbstractAccountRepository:
 
 
 class AccountRepository(AbstractAccountRepository):
-    def get_account_by_id(self, account_id: int) -> dict:
+    def get_account_by_id(self, account_id: int, user_id: int) -> dict:
         """유저가 가진 가계부 상세정보를 리턴"""
         try:
-            return self.serializer(
+            res = self.serializer(
                 self.model.objects.select_related("user").filter(is_deleted="V").get(id=account_id)
             ).data
+            
+            #본인 외에는 조회 불가
+            if res["user"] != user_id:
+                raise NotAuthorizedError
+
+            return res
         except self.model.DoesNotExist:
             raise NotFoundError()
 

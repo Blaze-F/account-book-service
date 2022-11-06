@@ -3,7 +3,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import JSONParser
 from drf_yasg.utils import swagger_auto_schema
-from decorater.execption_handler import execption_hanlder
+from decorator.execption_handler import execption_hanlder
+
 from provider.auth_provider import AuthProvider
 from user.service import UserService
 from user.serializers import UserSignUpSchema, UserSignupSerializer
@@ -13,7 +14,7 @@ auth_provider = AuthProvider()
 
 
 @api_view(["POST"])
-@execption_hanlder()
+# @execption_hanlder()
 @parser_classes([JSONParser])
 @swagger_auto_schema(
     responses={"access": "encoded_jwt"},

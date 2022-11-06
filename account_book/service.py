@@ -25,8 +25,8 @@ class AccountBookService:
 
         return self.account_book_repo.recover_account(user_id=user_id, account_id=account_id)
 
-    def get(self, account_id: int) -> dict:
-        return self.account_book_repo.get_account_by_id(account_id)
+    def get(self, account_id: int, user_id: int) -> dict:
+        return self.account_book_repo.get_account_by_id(account_id=account_id, user_id=user_id)
 
     def find(self, user_id: int) -> list:
         res = []

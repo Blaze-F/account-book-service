@@ -8,7 +8,7 @@ from account_book.views import (
     account_update,
 )
 
-
+app_name = 'account'
 urlpatterns = [
     path("account/create", account_create, name="create"),
     path("account/details", account_get, name="details"),

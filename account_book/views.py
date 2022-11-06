@@ -3,8 +3,8 @@ from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import JSONParser
 from account_book.repository import AccountRepository
 from account_book.service import AccountBookService
-from decorater.auth_handler import must_be_user
-from decorater.execption_handler import execption_hanlder
+from decorator.auth_handler import must_be_user
+from decorator.execption_handler import execption_hanlder
 from provider.auth_provider import auth_provider
 
 # 인스턴스 생성
@@ -52,7 +52,7 @@ def account_delete(request):
 def account_get(request):
     user_id = request.user["id"]
     account_id = request.GET["account_id"]
-    res= account_book_service.get(account_id)
+    res = account_book_service.get(account_id=account_id, user_id=user_id)
 
     return JsonResponse(res, status=200)
 
@@ -66,6 +66,7 @@ def account_find_all(request):
     res = account_book_service.find(user_id=user_id)
 
     return JsonResponse(res, safe=False, status=200)
+
 
 @api_view(["GET"])
 @execption_hanlder()
