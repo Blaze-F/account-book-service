@@ -8,6 +8,12 @@ pip install -r requirements.txt
 python -m manage.py runserver
 ```
 
+## Install : Docker 사용시
+```
+$ docker build -t . projectname
+$ docker run -d -p 8000:8000 projectname
+```
+
 ## Documentation
 
 
